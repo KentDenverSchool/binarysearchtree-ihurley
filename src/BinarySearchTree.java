@@ -34,14 +34,14 @@ public class BinarySearchTree <Key extends Comparable<Key>, Value> {
 
     //recursive put wrapper
     public void put(Key key, Value value) {
-        root = put(root, key, value);
+        put(root, key, value);
     }
 
     //recursive put
     //sets left/right or creates a new node appropriately, returns the
     //modified node n
-    private Node<Key,Value> put(Node<Key, Value> n, Key key, Value val) {
-      Node x=  new Node(key,val,1)
+    private void put(Node<Key, Value> n, Key key, Value val) {
+      Node x=  new Node(key,val,1);
       if (root == null){root = x;}
       else if ((x.getKey().compareTo(n.getKey())<0) && n.getLeft() == null){
         n.setLeft(x);
@@ -52,6 +52,8 @@ public class BinarySearchTree <Key extends Comparable<Key>, Value> {
       else if (x.getKey().compareTo(n.getKey())==0){
             n.setValue(val);
         }
+        else if (x.getKey().compareTo(n.getKey())<0){put(n.getLeft(),key,val);}
+      else {put(n.getRight(),key,val);}
         //recurse on both sides 
 
 
@@ -65,9 +67,19 @@ public class BinarySearchTree <Key extends Comparable<Key>, Value> {
     //recursive get
     //returns null if the key does not exist
     private Value get(Node<Key, Value> n, Key key) {
+        if(n == null){
+            return null;
+        }
+         else if (n.getKey().compareTo(key)==0){
+            return n.getValue();
+        }
+
+       else if (n.getKey().compareTo(key)>=0){return get(n.getLeft(),key);}
+        else {return get(n.getRight(),key);}
     }
 
     public boolean contains(Key key) {
+        return get(key)!=null;
     }
 
     public Value remove(Key key) {
@@ -100,6 +112,8 @@ public class BinarySearchTree <Key extends Comparable<Key>, Value> {
 
     //returns the node at the left most left branch of n
     private Node<Key, Value> min(Node<Key, Value> n) {
+        if (n.getLeft()==null){return n;}
+        else return min(n.getLeft());
     }
 
     public Key max() {
@@ -108,7 +122,8 @@ public class BinarySearchTree <Key extends Comparable<Key>, Value> {
 
     //returns the node at the right most right branch of n
     private Node<Key, Value> max(Node<Key, Value> n) {
-
+        if (n.getRight()==null){return n;}
+        else return max(n.getRight());
     }
 
     public String toString() {
